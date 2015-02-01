@@ -23,6 +23,8 @@ extern "C"
 {
 #endif
 
+#include "system_info_internal.h"
+
 #ifndef API
 #define API __attribute__ ((visibility("default")))
 #endif
@@ -32,6 +34,7 @@ extern "C"
 #define CPU_INFO_FILE_PATH "/proc/cpuinfo"
 #define CPU_INFO_MAX_FREQ_PATH "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"
 #define CONFIG_FILE_PATH "/etc/config/model-config.xml"
+#define SERIAL_PATH "/csa/imei/serialno.dat"
 #define MAXBUFSIZE 512
 
 #define PLATFORM_TAG	"platform"
@@ -90,6 +93,9 @@ int system_info_get_build_string(system_info_key_e key, system_info_data_type_e 
 int system_info_get_build_date(system_info_key_e key, system_info_data_type_e data_type, void **value);
 int system_info_get_build_time(system_info_key_e key, system_info_data_type_e data_type, void **value);
 int system_info_get_tethering_supported(system_info_key_e key, system_info_data_type_e data_type, void **value);
+
+int system_info_get_no_file(const char *key, void **value);
+
 #ifdef __cplusplus
 }
 #endif

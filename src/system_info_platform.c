@@ -93,6 +93,8 @@ int system_info_get_core_cpu_freq(system_info_key_e key, system_info_data_type_e
 		cpuinfo_max_freq = fopen(CPU_INFO_MAX_FREQ_PATH, "r");
 		if (NULL == cpuinfo_max_freq) {
 			LOGE("cannot file open %s file!!!", CPU_INFO_MAX_FREQ_PATH);
+			if (errno == EPERM || errno == EACCES)
+				return SYSTEM_INFO_ERROR_PERMISSION_DENIED;
 			return SYSTEM_INFO_ERROR_IO_ERROR;
 		} else {
 			if (fscanf(cpuinfo_max_freq, "%lf", &max_freq) < 1) {
@@ -107,6 +109,8 @@ int system_info_get_core_cpu_freq(system_info_key_e key, system_info_data_type_e
 		cpuinfo = fopen(CPU_INFO_FILE_PATH, "r");
 		if (NULL == cpuinfo) {
 			LOGE("cannot file open %s file!!!", CPU_INFO_FILE_PATH);
+			if (errno == EPERM || errno == EACCES)
+				return SYSTEM_INFO_ERROR_PERMISSION_DENIED;
 			return SYSTEM_INFO_ERROR_IO_ERROR;
 		} else {
 			while (fgets(str, MAXBUFSIZE, cpuinfo)) {
@@ -145,6 +149,8 @@ int system_info_get_tizen_version_name(system_info_key_e key, system_info_data_t
 	info = fopen(OS_RELEASE_FILE_PATH, "r");
 	if (NULL == info) {
 		LOGE("cannot file open %s file!!!", OS_RELEASE_FILE_PATH);
+		if (errno == EPERM || errno == EACCES)
+			return SYSTEM_INFO_ERROR_PERMISSION_DENIED;
 		return SYSTEM_INFO_ERROR_IO_ERROR;
 	}
 

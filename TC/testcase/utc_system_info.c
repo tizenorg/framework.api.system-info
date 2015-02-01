@@ -73,10 +73,6 @@ static void utc_system_info_manufacturer_p(void);
 static void utc_system_info_tethering_support_key_p(void);
 
 struct tet_testlist tet_testlist[] = {
-	{utc_system_info_get_int_p, 1},
-	{utc_system_info_get_int_n, 1},
-	{utc_system_info_get_bool_p, 1},
-	{utc_system_info_get_bool_n, 1},
 	{utc_system_info_get_string_p, 1},
 	{utc_system_info_get_string_n, 1},
 	{utc_system_info_get_double_p, 1},
@@ -87,7 +83,6 @@ struct tet_testlist tet_testlist[] = {
 	{utc_system_info_w_res_p, 1},
 	{utc_system_info_platform_name_p, 1},
 	{utc_system_info_platform_ver_p, 1},
-	{utc_system_info_screen_DPI_p, 1},
 	{utc_system_info_core_cpu_arch_p, 1},
 	{utc_system_info_core_freq_p, 1},
 	{utc_system_info_physical_screen_height_p, 1},
@@ -121,50 +116,6 @@ static void cleanup(void)
 
 /****************************************************************/
 /* check if all defined types for results are accessible */
-static void utc_system_info_get_int_p(void)
-{
-	int value;
-
-	int retcode = system_info_get_value_int(SYSTEM_INFO_KEY_CAMERA_COUNT, &value);
-
-	if (retcode == SYSTEM_INFO_ERROR_NONE)
-		dts_pass(API_NAME_SYSINFO_ACCESSIBLE, "passed");
-	else
-		dts_fail(API_NAME_SYSINFO_ACCESSIBLE, "failed");
-}
-
-static void utc_system_info_get_int_n(void)
-{
-	int retcode = system_info_get_value_int(SYSTEM_INFO_KEY_CAMERA_COUNT, NULL);
-
-	if (retcode != SYSTEM_INFO_ERROR_NONE)
-		dts_pass(API_NAME_SYSINFO_ACCESSIBLE, "passed");
-	else
-		dts_fail(API_NAME_SYSINFO_ACCESSIBLE, "failed");
-}
-
-static void utc_system_info_get_bool_p(void)
-{
-	bool value;
-
-	int retcode = system_info_get_value_bool(SYSTEM_INFO_KEY_BLUETOOTH_SUPPORTED, &value);
-
-	if (retcode == SYSTEM_INFO_ERROR_NONE)
-		dts_pass(API_NAME_SYSINFO_ACCESSIBLE, "passed");
-	else
-		dts_fail(API_NAME_SYSINFO_ACCESSIBLE, "failed");
-}
-
-static void utc_system_info_get_bool_n(void)
-{
-	int retcode = system_info_get_value_bool(SYSTEM_INFO_KEY_BLUETOOTH_SUPPORTED, NULL);
-
-	if (retcode != SYSTEM_INFO_ERROR_NONE)
-		dts_pass(API_NAME_SYSINFO_ACCESSIBLE, "passed");
-	else
-		dts_fail(API_NAME_SYSINFO_ACCESSIBLE, "failed");
-}
-
 static void utc_system_info_get_string_p(void)
 {
 	char *value = NULL;
@@ -309,18 +260,6 @@ static void utc_system_info_platform_ver_p(void)
 	}
 
 	result = (string_len < HUGE_STRING_LEN)  &&  (string_len > 0);
-
-	dts_check_eq(API_NAME_SYSINFO_GOOD_VALUE, result, 1);
-}
-
-static void utc_system_info_screen_DPI_p(void)
-{
-	int w = -1;
-	int result = 0;
-
-	system_info_get_value_int(SYSTEM_INFO_KEY_SCREEN_DPI, &w);
-
-	result = (w > 0)  &&  (w < 10000);
 
 	dts_check_eq(API_NAME_SYSINFO_GOOD_VALUE, result, 1);
 }
@@ -478,7 +417,7 @@ static void utc_system_info_get_platform_int(void)
 	int value = -1;
 	int result = 0;
 
-	system_info_get_value_int("tizen.org/feature/screen.bpp", &value);
+	system_info_get_platform_int("tizen.org/feature/screen.bpp", &value);
 
 	result = (value > 0)  &&  (value < 10000);
 
@@ -492,7 +431,7 @@ static void utc_system_info_get_platform_double(void)
 
 	retcode = system_info_get_platform_double("tizen.org/feature/double", &value);
 
-	if (retcode == SYSTEM_INFO_ERROR_IO_ERROR)
+	if (retcode != SYSTEM_INFO_ERROR_NONE)
 		dts_pass(API_NAME_SYSINFO_SUPPORT_CHECK(i), "passed");
 	else
 		dts_fail(API_NAME_SYSINFO_SUPPORT_CHECK(i), "failed");
@@ -523,7 +462,7 @@ static void utc_system_info_get_custom_bool(void)
 
 	retcode = system_info_get_custom_bool("tizen.org/feature/double", &value);
 
-	if (retcode == SYSTEM_INFO_ERROR_IO_ERROR)
+	if (retcode != SYSTEM_INFO_ERROR_NONE)
 		dts_pass(API_NAME_SYSINFO_SUPPORT_CHECK(i), "passed");
 	else
 		dts_fail(API_NAME_SYSINFO_SUPPORT_CHECK(i), "failed");
@@ -536,7 +475,7 @@ static void utc_system_info_get_custom_int(void)
 
 	retcode = system_info_get_custom_int("tizen.org/feature/double", &value);
 
-	if (retcode == SYSTEM_INFO_ERROR_IO_ERROR)
+	if (retcode != SYSTEM_INFO_ERROR_NONE)
 		dts_pass(API_NAME_SYSINFO_SUPPORT_CHECK(i), "passed");
 	else
 		dts_fail(API_NAME_SYSINFO_SUPPORT_CHECK(i), "failed");
@@ -549,7 +488,7 @@ static void utc_system_info_get_custom_double(void)
 
 	retcode = system_info_get_custom_double("tizen.org/feature/double", &value);
 
-	if (retcode == SYSTEM_INFO_ERROR_IO_ERROR)
+	if (retcode != SYSTEM_INFO_ERROR_NONE)
 		dts_pass(API_NAME_SYSINFO_SUPPORT_CHECK(i), "passed");
 	else
 		dts_fail(API_NAME_SYSINFO_SUPPORT_CHECK(i), "failed");
@@ -565,7 +504,7 @@ static void utc_system_info_get_custom_string(void)
 	if (value)
 		free(value);
 
-	if (retcode == SYSTEM_INFO_ERROR_IO_ERROR)
+	if (retcode != SYSTEM_INFO_ERROR_NONE)
 		dts_pass(API_NAME_SYSINFO_SUPPORT_CHECK(i), "passed");
 	else
 		dts_fail(API_NAME_SYSINFO_SUPPORT_CHECK(i), "failed");
