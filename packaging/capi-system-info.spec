@@ -1,67 +1,57 @@
-#sbs-git:slp/api/system-info capi-system-info 0.1.0 63d15bafa590ee9de869c8a8ade712e06828e5c3
-Name:       capi-system-info
-Summary:    A System Information library in SLP C API
-Version: 0.1.5
-Release:    0
-Group:      TO_BE/FILLED_IN
-License:    TO BE FILLED IN
-Source0:    %{name}-%{version}.tar.gz
-BuildRequires:  cmake
-BuildRequires:  pkgconfig(dlog)
-BuildRequires:  pkgconfig(vconf)
-BuildRequires:  pkgconfig(capi-base-common)
-BuildRequires:	pkgconfig(capi-network-wifi)
-BuildRequires:	pkgconfig(capi-media-sound-manager)
-BuildRequires:	pkgconfig(capi-uix-stt)
-BuildRequires:	pkgconfig(wifi-direct)
-BuildRequires:  pkgconfig(iniparser)
-BuildRequires:  pkgconfig(x11)
-BuildRequires:  pkgconfig(xi)
-BuildRequires:	pkgconfig(xrandr)
-BuildRequires:  pkgconfig(tapi)
-BuildRequires:	pkgconfig(devman)
-BuildRequires:	pkgconfig(xproto)
+Name:		capi-system-info
+Summary:	A System Information library in Core API
+Version:	0.2.0
+Release:	0
+Group:		System/Libraries
+License:	Apache-2.0
+Source0:	%{name}-%{version}.tar.gz
+Source1001:	%{name}.manifest
+Source2001:	tizenid.service
+BuildRequires:	cmake
+BuildRequires:	pkgconfig(dlog)
+BuildRequires:	pkgconfig(capi-base-common)
+BuildRequires:	pkgconfig(iniparser)
+BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(openssl)
-BuildRequires:	pkgconfig(nfc)
-BuildRequires:	pkgconfig(location)
-BuildRequires:	pkgconfig(bluetooth-api)
-BuildRequires:	pkgconfig(mm-radio)
-BuildRequires:	pkgconfig(sensor)
-%ifarch %{ix86}
-BuildRequires:	simulator-opengl-devel
-%else
-BuildRequires:	pkgconfig(gles11)
-%endif
+BuildRequires:	pkgconfig(cryptsvc)
 
-Requires(post): /sbin/ldconfig
+Requires(post):	/sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
 %description
 
 
 %package devel
-Summary:  A System Information library in SLP C API (Development)
-Group:    TO_BE/FILLED_IN
+Summary:  A System Information library in Core API (Development)
+Group:    Development/System
 Requires: %{name} = %{version}-%{release}
 
 %description devel
 
 
-
 %prep
 %setup -q
-
+cp %{SOURCE1001} .
 
 %build
 MAJORVER=`echo %{version} | awk 'BEGIN {FS="."}{print $1}'`
 cmake . -DCMAKE_INSTALL_PREFIX=/usr -DFULLVER=%{version} -DMAJORVER=${MAJORVER}
 
-
 make %{?jobs:-j%jobs}
 
 %install
 rm -rf %{buildroot}
+
 %make_install
+mkdir -p %{buildroot}/usr/share/license
+cp -f LICENSE %{buildroot}/usr/share/license/%{name}
+
+mkdir -p %{buildroot}/etc
+cp -f script/make_info_file.sh %{buildroot}/etc/make_info_file.sh
+
+mkdir -p %{buildroot}%{_libdir}/systemd/system/multi-user.target.wants
+install -m 0644 %SOURCE2001 %{buildroot}%{_libdir}/systemd/system/tizenid.service
+ln -s ../tizenid.service %{buildroot}%{_libdir}/systemd/system/multi-user.target.wants/tizenid.service
 
 %post -p /sbin/ldconfig
 
@@ -69,9 +59,18 @@ rm -rf %{buildroot}
 
 
 %files
+%manifest %{name}.manifest
+/usr/share/license/%{name}
 %{_libdir}/libcapi-system-info.so.*
+%attr(0744,root,-) /etc/make_info_file.sh
+%{_bindir}/tizen_id
+%{_libdir}/systemd/system/tizenid.service
+%{_libdir}/systemd/system/multi-user.target.wants/tizenid.service
 
 %files devel
+%manifest %{name}.manifest
 %{_includedir}/system/system_info.h
+%{_includedir}/system/system_info_type.h
+%{_includedir}/system/system_info_internal.h
 %{_libdir}/pkgconfig/*.pc
 %{_libdir}/libcapi-system-info.so

@@ -1,3 +1,83 @@
+capi-system-info (0.1.6-1) unstable; urgency=low
+
+  * Support SYSTEM_INFO_KEY_MANUFACTURER, SYSTEM_INFO_KEY_CP_INTERFACE
+  * Git: /framework/api/system-info
+  * Tag: capi-system-info_0.1.6-1
+
+ -- Kwanwoo Nam <kw46.nam@samsung.com>  Thu, 15 Nov 2012 17:00:00 +0900
+
+capi-system-info (0.1.5-10) unstable; urgency=low
+
+  * Add make_info_file.sh
+  * Git: /framework/api/system-info
+  * Tag: capi-system-info_0.1.5-10
+
+ -- Kwanwoo Nam <kw46.nam@samsung.com>  Thu, 15 Nov 2012 17:00:00 +0900
+
+capi-system-info (0.1.5-9) unstable; urgency=low
+
+  * Fixed some prevent defect cases
+  * Git: /framework/api/system-info
+  * Tag: capi-system-info_0.1.5-9
+
+ -- Yang Yonghyun <alex.yang@samsung.com>  Fri, 26 Oct 2012 17:00:00 +0900
+
+capi-system-info (0.1.5-8) unstable; urgency=low
+
+  * Remove the dependent with capi-network-wifi & wifi-direct packages
+  * Git: /framework/api/system-info
+  * Tag: capi-system-info_0.1.5-8
+
+ -- Yang Yonghyun <alex.yang@samsung.com>  Wed, 24 Oct 2012 14:00:00 +0900
+
+capi-system-info (0.1.5-7) unstable; urgency=low
+
+  * Support SYSTEM_INFO_KEY_CORE_CPU_ARCH, SYSTEM_INFO_KEY_CORE_FPU_ARCH in Emulator Environment
+  * Git: /framework/api/system-info
+  * Tag: capi-system-info_0.1.5-7
+
+ -- Yang Yonghyun <alex.yang@samsung.com>  Wed, 17 Oct 2012 17:00:00 +0900
+
+capi-system-info (0.1.5-6) unstable; urgency=low
+
+  * Fixed prevent defect cases : CID 17696, 14717, 12322, 12323, 14713, 14716, 16983, 14714, 14715, 10432
+  * Git: /framework/api/system-info
+  * Tag: capi-system-info_0.1.5-6
+
+ -- Yang Yonghyun <alex.yang@samsung.com>  Mon, 15 Oct 2012 15:30:00 +0900
+
+capi-system-info (0.1.5-5) unstable; urgency=low
+
+  * Applying SMACK manifest
+  * Git: /framework/api/system-info
+  * Tag: capi-system-info_0.1.5-5
+
+ -- Yang Yonghyun <alex.yang@samsung.com>  Fri, 21 Sep 2012 09:30:00 +0900
+
+capi-system-info (0.1.5-4) unstable; urgency=low
+
+  * Bug Fix : Add XFree code after using Xmalloc pointer & fixed DPI calculation code
+  * Git: /framework/api/system-info
+  * Tag: capi-system-info_0.1.5-4
+
+ -- Yang Yonghyun <alex.yang@samsung.com>  Tue, 11 Sep 2012 15:00:00 +0900
+
+capi-system-info (0.1.5-3) unstable; urgency=low
+
+  * Bug Fix : Add null checking code when IMEI value is null
+  * Git: /framework/api/system-info
+  * Tag: capi-system-info_0.1.5-3
+
+ -- Yang Yonghyun <alex.yang@samsung.com>  Sat, 08 Sep 2012 19:30:00 +0900
+
+capi-system-info (0.1.5-2) unstable; urgency=low
+
+  * Remove usage of wifi_direct_deinitialize() function
+  * Git: /framework/api/system-info
+  * Tag: capi-system-info_0.1.5-2
+
+ -- Yang Yonghyun <alex.yang@samsung.com>  Wed, 05 Sep 2012 15:53:00 +0900
+
 capi-system-info (0.1.5-1) unstable; urgency=low
 
   * Change how to get the camera informations
@@ -6,7 +86,6 @@ capi-system-info (0.1.5-1) unstable; urgency=low
 
  -- Yang Yonghyun <alex.yang@samsung.com>  Tue, 04 Sep 2012 16:10:00 +0900
 
-
 capi-system-info (0.1.5-0) unstable; urgency=low
 
   * Addded Platform Build Information APIs
@@ -14,7 +93,6 @@ capi-system-info (0.1.5-0) unstable; urgency=low
   * Tag: capi-system-info_0.1.5-0
 
  -- Yang Yonghyun <alex.yang@samsung.com>  Mon, 03 Sep 2012 15:06:00 +0900
-
 
 capi-system-info (0.1.0-14) unstable; urgency=low
 
@@ -119,7 +197,7 @@ capi-system-info (0.1.0-2) unstable; urgency=low
   * Change system information key and value
   * Git: slp-source.sec.samsung.net:slp/api/system-info
   * Tag: capi-system-info_0.1.0-2
- 
+
  -- Kyuhun Jung <kyuhun.jung@samsung.com>  Mon, 21 Nov 2011 09:56:39 +0300
 
 
@@ -132,7 +210,7 @@ capi-system-info (0.1.0-1) unstable; urgency=low
  -- Kyuhun Jung <kyuhun.jung@samsung.com>  Tue, 27 Sep 2011 21:00:50 +0900
 
 capi-system-info (0.0.1-5) unstable; urgency=low
-  
+
   * Update API descriptions
   * Git: slp-source.sec.samsung.net:slp/api/system-info
   * Tag: capi-system-info_0.0.1-5
@@ -172,4 +250,3 @@ capi-system-info (0.0.1-1) unstable; urgency=low
 
 
  -- Woongsuk Cho <ws77.cho@samsung.com>  Thu, 04 Aug 2011 17:40:37 +0900
-

@@ -10,7 +10,7 @@ SET(PREFIX ${CMAKE_INSTALL_PREFIX})
 SET(INC_DIR include)
 INCLUDE_DIRECTORIES(${INC_DIR})
 
-SET(requires "dlog capi-base-common capi-network-wifi capi-media-sound-manager capi-uix-stt wifi-direct vconf iniparser x11 xi xrandr tapi devman xproto openssl nfc location bluetooth-api mm-radio sensor")
+SET(requires "dlog capi-base-common iniparser libxml-2.0")
 SET(pc_requires "capi-base-common")
 
 INCLUDE(FindPkgConfig)
@@ -19,7 +19,7 @@ FOREACH(flag ${${fw_name}_CFLAGS})
     SET(EXTRA_CFLAGS "${EXTRA_CFLAGS} ${flag}")
 ENDFOREACH(flag)
 
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS} -fPIC -Wall -Werror")
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS} -fPIC -Wall -Werror -fvisibility=hidden")
 SET(CMAKE_C_FLAGS_DEBUG "-O0 -g")
 
 IF("${ARCH}" STREQUAL "arm")
@@ -48,6 +48,7 @@ INSTALL(
         DIRECTORY ${INC_DIR}/ DESTINATION include/system
         FILES_MATCHING
         PATTERN "*_private.h" EXCLUDE
+        PATTERN "*_doc.h" EXCLUDE
         PATTERN "${INC_DIR}/*.h"
         )
 
@@ -63,14 +64,16 @@ CONFIGURE_FILE(
 )
 INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${fw_name}.pc DESTINATION lib/pkgconfig)
 
+ADD_SUBDIRECTORY(src/tizenid)
+
 IF(UNIX)
 
 ADD_CUSTOM_TARGET (distclean @echo cleaning for source distribution)
 ADD_CUSTOM_COMMAND(
-        DEPENDS clean 
+        DEPENDS clean
         COMMENT "distribution clean"
         COMMAND find
-        ARGS    . 
+        ARGS    .
         -not -name config.cmake -and \(
         -name tester.c -or
         -name Testing -or
@@ -93,4 +96,3 @@ ADD_CUSTOM_COMMAND(
 )
 
 ENDIF(UNIX)
-

@@ -18,18 +18,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <ctype.h>
 
-#include <vconf.h>
 #include <dlog.h>
 
 #include <system_info.h>
 #include <system_info_private.h>
+#include <sys/utsname.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
 #endif
 
-#define LOG_TAG "TIZEN_N_SYSTEM_INFO"
+#define LOG_TAG "CAPI_SYSTEM_INFO"
 
 #define SYSTEM_INFO_MAX -1
 
@@ -58,77 +60,6 @@ system_info_s system_info_table[] = {
 },
 
 {
-	/**< Indicates whether the device supports Bluetooth */
-	SYSTEM_INFO_KEY_BLUETOOTH_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_bluetooth_supported
-},
-
-{
-	/**< The number of cameras in the device */
-	SYSTEM_INFO_KEY_CAMERA_COUNT,
-	SYSTEM_INFO_DATA_TYPE_INT,
-	system_info_get_camera_count
-},
-
-{
-	/**< Indicates whether the device supports FM radio */
-	SYSTEM_INFO_KEY_FMRADIO_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_fmradio_supported
-},
-
-{
-	/**< Indicates whether the device supports GPS */
-	SYSTEM_INFO_KEY_GPS_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_gps_supported
-},
-
-{
-	/**< The type of the keyboard */
-	SYSTEM_INFO_KEY_KEYBOARD_TYPE,
-	SYSTEM_INFO_DATA_TYPE_STRING,
-	system_info_get_keyboard_type
-},
-
-{
-	/**< The maximum number of concurrent touch points supported
-	in the device */
-	SYSTEM_INFO_KEY_MULTI_POINT_TOUCH_COUNT,
-	SYSTEM_INFO_DATA_TYPE_INT,
-	system_info_get_multi_point_touch_count
-},
-
-{
-	/**< The supported network type */
-	SYSTEM_INFO_KEY_NETWORK_TYPE,
-	SYSTEM_INFO_DATA_TYPE_STRING,
-	system_info_get_network_type
-},
-
-{
-	/**< Indicates whether the device supports NFC */
-	SYSTEM_INFO_KEY_NFC_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_nfc_supported
-},
-
-{
-	/**< The supported version of the OpenGL ES */
-	SYSTEM_INFO_KEY_OPENGLES_VERSION,
-	SYSTEM_INFO_DATA_TYPE_STRING,
-	system_info_get_opengles_version
-},
-
-{
-	/**< The number of bits per pixel */
-	SYSTEM_INFO_KEY_SCREEN_BITS_PER_PIXEL,
-	SYSTEM_INFO_DATA_TYPE_INT,
-	system_info_get_screen_bits_per_pixel
-},
-
-{
 	/**< The height of the screen in pixels */
 	SYSTEM_INFO_KEY_SCREEN_HEIGHT,
 	SYSTEM_INFO_DATA_TYPE_INT,
@@ -140,34 +71,6 @@ system_info_s system_info_table[] = {
 	SYSTEM_INFO_KEY_SCREEN_WIDTH,
 	SYSTEM_INFO_DATA_TYPE_INT,
 	system_info_get_screen_width
-},
-
-{
-	/**< Indicates whether the device supports TV-out */
-	SYSTEM_INFO_KEY_TVOUT_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_tvout_supported
-},
-
-{
-	 /**< Indicates whether the device supports Wi-Fi */
-	SYSTEM_INFO_KEY_WIFI_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_wifi_supported
-},
-
-{
-	 /**< The unique ID to identify GSM, and UMTS mobile devices */
-	SYSTEM_INFO_KEY_MOBILE_DEVICE_ID,
-	SYSTEM_INFO_DATA_TYPE_STRING,
-	system_info_get_mobile_device_id
-},
-
-{
-	/**< The sales code of the CSC */
-	SYSTEM_INFO_KEY_CSC_SALES_CODE,
-	SYSTEM_INFO_DATA_TYPE_STRING,
-	system_info_get_csc_sales_code
 },
 
 {
@@ -185,164 +88,10 @@ system_info_s system_info_table[] = {
 },
 
 {
-	/**< Indicates whether the device supports HAPTIC */
-	SYSTEM_INFO_KEY_HAPTIC_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_haptic_supproted
-},
-
-{
-	/**< Indicates whether the device supports HAPTIC */
-	SYSTEM_INFO_KEY_WIFI_DIRECT_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_wifi_direct_supported
-},
-
-{
-	/**< The height of the screen DPI */
-	SYSTEM_INFO_KEY_SCREEN_DPI,
-	SYSTEM_INFO_DATA_TYPE_INT,
-	system_info_get_screen_DPI
-},
-
-{
-	/**< The Device unique ID to identify */
-	SYSTEM_INFO_KEY_DEVICE_UUID,
-	SYSTEM_INFO_DATA_TYPE_STRING,
-	system_info_get_device_uuid
-},
-
-{
-	/**< Indicates whether the device supports GPS */
-	SYSTEM_INFO_KEY_CPS_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_cps_supported
-},
-
-{
-	/**< Indicates whether the device supports GPS */
-	SYSTEM_INFO_KEY_WPS_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_wps_supported
-},
-
-{
-	/**< Indicates whether the device supports USB host */
-	SYSTEM_INFO_KEY_USB_HOST_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_usb_host_supported
-},
-
-{
-	/**< Indicates whether the device supports USB accessory */
-	SYSTEM_INFO_KEY_USB_ACCESSORY_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_usb_accessory_supported
-},
-
-{
 	/**< The CORE CPU architecture of model */
 	SYSTEM_INFO_KEY_CORE_CPU_ARCH,
 	SYSTEM_INFO_DATA_TYPE_STRING,
 	system_info_get_core_cpu_arch
-},
-
-{
-	/**< The CORE FPU architecture of model */
-	SYSTEM_INFO_KEY_CORE_FPU_ARCH,
-	SYSTEM_INFO_DATA_TYPE_STRING,
-	system_info_get_core_fpu_arch
-},
-
-{
-	/**< Indicates whether the device supports front camera */
-	SYSTEM_INFO_KEY_FRONT_CAMERA_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_front_camera_supported
-},
-
-{
-	/**< Indicates whether the device supports front camera auto focus */
-	SYSTEM_INFO_KEY_FRONT_CAMERA_AF_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_front_camera_af_supported
-},
-
-{
-	/**< Indicates whether the device supports front camera flash */
-	SYSTEM_INFO_KEY_FRONT_CAMERA_FLASH_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_front_camera_flash_supported
-},
-
-{
-	/**< Indicates whether the device supports back camera */
-	SYSTEM_INFO_KEY_BACK_CAMERA_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_back_camera_supported
-},
-
-{
-	/**< Indicates whether the device supports back camera auto focus */
-	SYSTEM_INFO_KEY_BACK_CAMERA_AF_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_back_camera_af_supported
-},
-
-{
-	/**< Indicates whether the device supports back camera flash */
-	SYSTEM_INFO_KEY_BACK_CAMERA_FLASH_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_back_camera_flash_supported
-},
-
-{
-	/**< Indicates whether the device supports HDMI */
-	SYSTEM_INFO_KEY_HDMI_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_hdmi_supported
-},
-
-{
-	/**< Indicates whether the device supports RCA */
-	SYSTEM_INFO_KEY_RCA_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_rca_supported
-},
-
-{
-	/**< Indicates whether the device supports SIP VOIP */
-	SYSTEM_INFO_KEY_SIP_VOIP_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_sip_voip_supported
-},
-
-{
-	/**< Indicates whether the device supports Microphone */
-	SYSTEM_INFO_KEY_MICROPHONE_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_microphone_supported
-},
-
-{
-	/**< Indicates whether the device supports stt */
-	SYSTEM_INFO_KEY_SPEECH_RECOGNITION_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_speech_recognition_supported
-},
-
-{
-	/**< Indicates whether the device supports barometer sensor */
-	SYSTEM_INFO_KEY_BAROMETER_SENSOR_SUPPORTED,
-	SYSTEM_INFO_DATA_TYPE_BOOL,
-	system_info_get_barometer_sensor_supported
-},
-
-{
-	/**< The supported texture format of the OpenGL ES */
-	SYSTEM_INFO_KEY_OPENGLES_TEXTURE_FORMAT,
-	SYSTEM_INFO_DATA_TYPE_STRING,
-	system_info_get_opengles_texture_format
 },
 
 {
@@ -388,69 +137,65 @@ system_info_s system_info_table[] = {
 },
 
 {
+	/**< The manufacturer of the device */
+	SYSTEM_INFO_KEY_MANUFACTURER,
+	SYSTEM_INFO_DATA_TYPE_STRING,
+	system_info_get_manufacturer
+},
+
+{
+	/**< Indicates whether the device supports tethering */
+	SYSTEM_INFO_KEY_TETHERING_SUPPORTED,
+	SYSTEM_INFO_DATA_TYPE_BOOL,
+	system_info_get_tethering_supported
+},
+
+{
 	SYSTEM_INFO_MAX, -1, NULL
 }
 
 };
 
 static system_info_mode_type_e system_info_system_info_model_type;
-static int system_info_initialized;
 
-int system_info_get_system_info_initialized()
-{
-	return system_info_initialized;
-}
-
-void system_info_set_system_info_initialized(int value)
-{
-	system_info_initialized = value;
-}
-
-system_info_mode_type_e system_info_get_system_info_model_type()
+system_info_mode_type_e system_info_get_system_info_model_type(void)
 {
 	return system_info_system_info_model_type;
 }
 
-int system_info_init(void)
+void __attribute__((constructor)) system_info_init(void)
 {
-	FILE *fp;
-	char str[MAXBUFSIZE];
-	extern char *strcasestr(const char *s, const char *find);
+	int ret, len, i;
+	char *str = NULL;
 
-	fp = popen("uname -m", "r");
-	if (NULL == fp) {
-		LOGE("[%s] cannot execute uname command!!!", __func__);
-		return SYSTEM_INFO_ERROR_IO_ERROR;
-	} else {
-		while (fgets(str, MAXBUFSIZE, fp)) {
-			if (strcasestr(str, "emulated")) {
-				system_info_system_info_model_type = SYSTEM_INFO_MODEL_TYPE_EMULATOR;
-				system_info_set_system_info_initialized(1);
-				pclose(fp);
-				return SYSTEM_INFO_ERROR_NONE;
+	ret = system_info_get_platform_string("tizen.org/system/model_name", &str);
 
-			}
-		}
-
-		system_info_system_info_model_type = SYSTEM_INFO_MODEL_TYPE_TARGET;
-		system_info_set_system_info_initialized(1);
-		pclose(fp);
-		return SYSTEM_INFO_ERROR_NONE;
+	if (ret != SYSTEM_INFO_ERROR_NONE) {
+		LOGE("initialize error");
+		return;
 	}
+
+	if (!str) {
+		LOGE("Failed to get model name");
+		return;
+	}
+
+	len = strlen(str);
+	for (i = 0 ; i < len ; i++) {
+		str[i] = toupper(str[i]);
+	}
+
+	if (!strcmp(str, "EMULATOR"))
+		system_info_system_info_model_type = SYSTEM_INFO_MODEL_TYPE_EMULATOR;
+	else
+		system_info_system_info_model_type = SYSTEM_INFO_MODEL_TYPE_TARGET;
+
+	free(str);
 }
 
 static int system_info_get(system_info_key_e key, system_info_h *system_info)
 {
 	int index = 0;
-	int ret_val;
-
-	if (0 == system_info_get_system_info_initialized()) {
-		ret_val = system_info_init();
-		if (ret_val) {
-			LOGE("[%s] system information initialize fail!!!", __func__);
-			return ret_val;
-		}
-	}
 
 	while (system_info_table[index].key != SYSTEM_INFO_MAX) {
 		if (system_info_table[index].key == key) {
@@ -470,46 +215,302 @@ int system_info_get_value(system_info_key_e key, system_info_data_type_e data_ty
 	system_info_get_value_cb system_info_getter;
 
 	if (value == NULL) {
-		LOGE("[%s] INVALID_PARAMETER(0x%08x) : invalid output param", __func__, SYSTEM_INFO_ERROR_INVALID_PARAMETER);
+		LOGE("INVALID_PARAMETER(0x%08x) : invalid output param", SYSTEM_INFO_ERROR_INVALID_PARAMETER);
 		return SYSTEM_INFO_ERROR_INVALID_PARAMETER;
 	}
 
 	if (system_info_get(key, &system_info)) {
-		LOGE("[%s] INVALID_PARAMETER(0x%08x) : invalid key", __func__, SYSTEM_INFO_ERROR_INVALID_PARAMETER);
+		LOGE("INVALID_PARAMETER(0x%08x) : invalid key", SYSTEM_INFO_ERROR_INVALID_PARAMETER);
 		return SYSTEM_INFO_ERROR_INVALID_PARAMETER;
 	}
 
 	if (system_info->data_type != data_type) {
-		LOGE("[%s] INVALID_PARAMETER(0x%08x) : invalid data type", __func__, SYSTEM_INFO_ERROR_INVALID_PARAMETER);
+		LOGE("INVALID_PARAMETER(0x%08x) : invalid data type", SYSTEM_INFO_ERROR_INVALID_PARAMETER);
 		return SYSTEM_INFO_ERROR_INVALID_PARAMETER;
 	}
 
 	system_info_getter = system_info->get_value_cb;
 
 	if (system_info_getter == NULL) {
-		LOGE("[%s] IO_ERROR(0x%08x) : failed to call getter for the system information", __func__, SYSTEM_INFO_ERROR_IO_ERROR);
+		LOGE("IO_ERROR(0x%08x) : failed to call getter for the system information", SYSTEM_INFO_ERROR_IO_ERROR);
 		return SYSTEM_INFO_ERROR_IO_ERROR;
 	}
 
 	return system_info_getter(key, system_info->data_type, value);
 }
 
-int system_info_get_value_int(system_info_key_e key, int *value)
+API int system_info_get_value_int(system_info_key_e key, int *value)
 {
 	return system_info_get_value(key, SYSTEM_INFO_DATA_TYPE_INT, (void **)value);
 }
 
-int system_info_get_value_bool(system_info_key_e key, bool *value)
+API int system_info_get_value_bool(system_info_key_e key, bool *value)
 {
 	return system_info_get_value(key, SYSTEM_INFO_DATA_TYPE_BOOL, (void **)value);
 }
 
-int system_info_get_value_double(system_info_key_e key, double *value)
+API int system_info_get_value_double(system_info_key_e key, double *value)
 {
 	return system_info_get_value(key, SYSTEM_INFO_DATA_TYPE_DOUBLE, (void **)value);
 }
 
-int system_info_get_value_string(system_info_key_e key, char **value)
+API int system_info_get_value_string(system_info_key_e key, char **value)
 {
 	return system_info_get_value(key, SYSTEM_INFO_DATA_TYPE_STRING, (void **)value);
+}
+
+API int system_info_get_platform_bool(const char *key, bool *value)
+{
+	int ret;
+	bool *supported;
+	char *string = NULL;
+
+	supported = (bool *)value;
+
+	if (access(CONFIG_FILE_PATH, R_OK)) {
+		LOGE("cannot find file %s!!!", CONFIG_FILE_PATH);
+		if (errno == EPERM || errno == EACCES)
+			return SYSTEM_INFO_ERROR_PERMISSION_DENIED;
+		return SYSTEM_INFO_ERROR_IO_ERROR;
+	}
+
+	ret = system_info_get_value_from_config_xml(PLATFORM_TAG, key, BOOL_TYPE, &string);
+	if (ret) {
+		LOGE("cannot get %s", key);
+		return ret;
+	}
+
+	if (!strcmp(string, "true") || !strcmp(string, "TRUE"))
+		*supported = true;
+	else
+		*supported = false;
+
+	free(string);
+
+	return SYSTEM_INFO_ERROR_NONE;
+}
+
+API int system_info_get_platform_int(const char *key, int *value)
+{
+	int ret;
+	int *ret_val;
+	char *string = NULL;
+
+	ret_val = (int *)value;
+
+	if (access(CONFIG_FILE_PATH, R_OK)) {
+		LOGE("cannot find file %s!!!", CONFIG_FILE_PATH);
+		if (errno == EPERM || errno == EACCES)
+			return SYSTEM_INFO_ERROR_PERMISSION_DENIED;
+		return SYSTEM_INFO_ERROR_IO_ERROR;
+	}
+
+	ret = system_info_get_value_from_config_xml(PLATFORM_TAG, key, INT_TYPE, &string);
+	if (ret) {
+		LOGE("cannot get %s", key);
+		return ret;
+	}
+
+	*ret_val = atoi(string);
+
+	free(string);
+
+	return SYSTEM_INFO_ERROR_NONE;
+}
+
+API int system_info_get_platform_double(const char *key, double *value)
+{
+	int ret;
+	double *ret_val;
+	char *string = NULL;
+
+	ret_val = (double *)value;
+
+	if (access(CONFIG_FILE_PATH, R_OK)) {
+		LOGE("cannot find file %s!!!", CONFIG_FILE_PATH);
+		if (errno == EPERM || errno == EACCES)
+			return SYSTEM_INFO_ERROR_PERMISSION_DENIED;
+		return SYSTEM_INFO_ERROR_IO_ERROR;
+	}
+
+	ret = system_info_get_value_from_config_xml(PLATFORM_TAG, key, DBL_TYPE, &string);
+	if (ret) {
+		LOGE("cannot get %s", key);
+		return ret;
+	}
+
+	*ret_val = atof(string);
+
+	free(string);
+
+	return SYSTEM_INFO_ERROR_NONE;
+}
+
+API int system_info_get_platform_string(const char *key, char **value)
+{
+	int ret;
+	char *string = NULL;
+
+	if (access(CONFIG_FILE_PATH, R_OK)) {
+		LOGE("cannot find file %s!!!", CONFIG_FILE_PATH);
+		if (errno == EPERM || errno == EACCES)
+			return SYSTEM_INFO_ERROR_PERMISSION_DENIED;
+		return SYSTEM_INFO_ERROR_IO_ERROR;
+	}
+
+	ret = system_info_get_no_file(key, (void**)&string);
+	if (ret == 0) {
+		*value = string;
+		return SYSTEM_INFO_ERROR_NONE;
+	}
+
+	ret = system_info_get_value_from_config_xml(PLATFORM_TAG, key, STR_TYPE, &string);
+	if (ret) {
+		LOGE("cannot get %s", key);
+		return ret;
+	}
+
+	*value = string;
+
+	return SYSTEM_INFO_ERROR_NONE;
+}
+
+API int system_info_get_custom_bool(const char *key, bool *value)
+{
+	int ret;
+	bool *supported;
+	char *string = NULL;
+
+	supported = (bool *)value;
+
+	if (access(CONFIG_FILE_PATH, R_OK)) {
+		LOGE("cannot find file %s!!!", CONFIG_FILE_PATH);
+		if (errno == EPERM || errno == EACCES)
+			return SYSTEM_INFO_ERROR_PERMISSION_DENIED;
+		return SYSTEM_INFO_ERROR_IO_ERROR;
+	}
+
+	ret = system_info_get_value_from_config_xml(CUSTOM_TAG, key, BOOL_TYPE, &string);
+	if (ret) {
+		LOGE("cannot get %s info from %s!!!", key, CONFIG_FILE_PATH);
+		return ret;
+	}
+
+	if (!strcmp(string, "true") || !strcmp(string, "TRUE"))
+		*supported = true;
+	else
+		*supported = false;
+
+	free(string);
+
+	return SYSTEM_INFO_ERROR_NONE;
+}
+
+API int system_info_get_custom_int(const char *key, int *value)
+{
+	int ret;
+	int *ret_val;
+	char *string = NULL;
+
+	ret_val = (int *)value;
+
+	if (access(CONFIG_FILE_PATH, R_OK)) {
+		LOGE("cannot find file %s!!!", CONFIG_FILE_PATH);
+		if (errno == EPERM || errno == EACCES)
+			return SYSTEM_INFO_ERROR_PERMISSION_DENIED;
+		return SYSTEM_INFO_ERROR_IO_ERROR;
+	}
+
+	ret = system_info_get_value_from_config_xml(CUSTOM_TAG, key, INT_TYPE, &string);
+	if (ret) {
+		LOGE("cannot get %s info from %s!!!", key, CONFIG_FILE_PATH);
+		return ret;
+	}
+
+	*ret_val = atoi(string);
+
+	free(string);
+
+	return SYSTEM_INFO_ERROR_NONE;
+}
+
+API int system_info_get_custom_double(const char *key, double *value)
+{
+	int ret;
+	double *ret_val;
+	char *string = NULL;
+
+	ret_val = (double *)value;
+
+	if (access(CONFIG_FILE_PATH, R_OK)) {
+		LOGE("cannot find file %s!!!", CONFIG_FILE_PATH);
+		if (errno == EPERM || errno == EACCES)
+			return SYSTEM_INFO_ERROR_PERMISSION_DENIED;
+		return SYSTEM_INFO_ERROR_IO_ERROR;
+	}
+
+	ret = system_info_get_value_from_config_xml(CUSTOM_TAG, key, DBL_TYPE, &string);
+	if (ret) {
+		LOGE("cannot get %s info from %s!!!", key, CONFIG_FILE_PATH);
+		return ret;
+	}
+
+	*ret_val = atof(string);
+
+	free(string);
+
+	return SYSTEM_INFO_ERROR_NONE;
+}
+
+API int system_info_get_custom_string(const char *key, char **value)
+{
+	int ret;
+	char *string = NULL;
+
+	if (access(CONFIG_FILE_PATH, R_OK)) {
+		LOGE("cannot find file %s!!!", CONFIG_FILE_PATH);
+		if (errno == EPERM || errno == EACCES)
+			return SYSTEM_INFO_ERROR_PERMISSION_DENIED;
+		return SYSTEM_INFO_ERROR_IO_ERROR;
+	}
+
+	ret = system_info_get_value_from_config_xml(CUSTOM_TAG, key, STR_TYPE, &string);
+	if (ret) {
+		LOGE("cannot get %s info from %s!!!", key, CONFIG_FILE_PATH);
+		return ret;
+	}
+
+	*value = string;
+
+	return SYSTEM_INFO_ERROR_NONE;
+}
+
+API int system_info_get_internal_value(const char *key, char **value)
+{
+	int ret, len;
+	char *string = NULL;
+
+	len = strlen(BOARD_CONFIG);
+
+	if (!strncmp(key, BOARD_CONFIG, len)) {
+		if (system_info_get_bsp_info(key, value) == SYSTEM_INFO_ERROR_NONE)
+			return SYSTEM_INFO_ERROR_NONE;
+	}
+
+	if (access(CONFIG_FILE_PATH, R_OK)) {
+		LOGE("cannot find file %s!!!", CONFIG_FILE_PATH);
+		if (errno == EPERM || errno == EACCES)
+			return SYSTEM_INFO_ERROR_PERMISSION_DENIED;
+		return SYSTEM_INFO_ERROR_IO_ERROR;
+	}
+
+	ret = system_info_get_value_from_config_xml(INTERNAL_TAG, key, STR_TYPE, &string);
+	if (ret) {
+		LOGE("cannot get %s info from %s!!!", key, CONFIG_FILE_PATH);
+		return ret;
+	}
+
+	*value = string;
+
+	return SYSTEM_INFO_ERROR_NONE;
 }
