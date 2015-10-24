@@ -22,21 +22,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <dlog.h>
-
 #include <system_info.h>
 #include <system_info_private.h>
 
-#ifdef LOG_TAG
-#undef LOG_TAG
-#endif
-
-#define LOG_TAG "CAPI_SYSTEM_INFO"
-
 #define SERIAL_TOK_DELIMITER ","
 #define BUF_MAX 256
-
-#define TIZEN_ID_PATH	"/opt/home/root/tizenid"
 
 static int get_tizenid(char **value)
 {
@@ -45,12 +35,12 @@ static int get_tizenid(char **value)
 
 	fp = fopen(TIZEN_ID_PATH, "r");
 	if (!fp) {
-		LOGE("Failed to open file (%s)", TIZEN_ID_PATH);
+		_E("Failed to open file (%s)", TIZEN_ID_PATH);
 		return SYSTEM_INFO_ERROR_IO_ERROR;
 	}
 
 	if (fgets(id, sizeof(id), fp) == NULL) {
-		LOGE("Failed to get string (errno:%d)", errno);
+		_E("Failed to get string (errno:%d)", errno);
 		fclose(fp);
 		return SYSTEM_INFO_ERROR_IO_ERROR;
 	}
@@ -58,7 +48,7 @@ static int get_tizenid(char **value)
 	fclose(fp);
 
 	if (strlen(id) == 0) {
-		LOGE("String length of id is 0");
+		_E("String length of id is 0");
 		return SYSTEM_INFO_ERROR_IO_ERROR;
 	}
 
@@ -67,29 +57,27 @@ static int get_tizenid(char **value)
 	return 0;
 }
 
-static int get_build_info(int key, char *buf, unsigned int len)
+static int get_build_info(char *key, char *buf, unsigned int len)
 {
 	int ret;
 	char *val;
 
-	if (key != SYSTEM_INFO_KEY_BUILD_DATE &&
-		key != SYSTEM_INFO_KEY_BUILD_STRING &&
-		key != SYSTEM_INFO_KEY_BUILD_TIME)
+	if (!key)
 		return -EINVAL;
 
-	ret = system_info_get_value_string(key, &val);
+	ret = system_info_ini_get_string(INFO_FILE_PATH, key, &val);
 	if (ret != SYSTEM_INFO_ERROR_NONE) {
-		LOGE("Failed to get build date(%d)", ret);
+		_E("Failed to get build date(%d)", ret);
 		return ret;
 	}
 
 	if (!val) {
-		LOGE("val == NULL");
+		_E("val == NULL");
 		return SYSTEM_INFO_ERROR_OUT_OF_MEMORY;
 	}
 
 	if (strlen(val) == 0) {
-		LOGE("Invalid date");
+		_E("Invalid date");
 		free(val);
 		return SYSTEM_INFO_ERROR_IO_ERROR;
 	}
@@ -105,9 +93,9 @@ static int get_build_date(char **value)
 	int ret;
 	char date[BUF_MAX];
 
-	ret = get_build_info(SYSTEM_INFO_KEY_BUILD_DATE, date, sizeof(date));
+	ret = get_build_info("build:date", date, sizeof(date));
 	if (ret != SYSTEM_INFO_ERROR_NONE) {
-		LOGE("Failed to get build date(%d)", ret);
+		_E("Failed to get build date(%d)", ret);
 		return ret;
 	}
 
@@ -121,9 +109,9 @@ static int get_build_string(char **value)
 	int ret;
 	char str[BUF_MAX];
 
-	ret = get_build_info(SYSTEM_INFO_KEY_BUILD_STRING, str, sizeof(str));
+	ret = get_build_info("version:build", str, sizeof(str));
 	if (ret != SYSTEM_INFO_ERROR_NONE) {
-		LOGE("Failed to get build date(%d)", ret);
+		_E("Failed to get build date(%d)", ret);
 		return ret;
 	}
 
@@ -137,9 +125,9 @@ static int get_build_time(char **value)
 	int ret;
 	char time[BUF_MAX];
 
-	ret = get_build_info(SYSTEM_INFO_KEY_BUILD_TIME, time, sizeof(time));
+	ret = get_build_info("build:time", time, sizeof(time));
 	if (ret != SYSTEM_INFO_ERROR_NONE) {
-		LOGE("Failed to get build date(%d)", ret);
+		_E("Failed to get build date(%d)", ret);
 		return ret;
 	}
 

@@ -32,7 +32,6 @@ extern "C"
 
 /**
  * @brief Enumeration of error codes for system information
- * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef enum {
 	SYSTEM_INFO_ERROR_NONE              = TIZEN_ERROR_NONE,          /**< Successful */

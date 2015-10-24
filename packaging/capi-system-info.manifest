@@ -4,5 +4,6 @@
 	</request>
 	<assign>
 		<filesystem path="/etc/make_info_file.sh" exec_label="none" />
+		<filesystem path="/usr/bin/tizen_id" exec_label="none" />
 	</assign>
 </manifest>

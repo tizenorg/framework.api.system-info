@@ -29,7 +29,7 @@
 #include <openssl/evp.h>
 #include <openssl/rand.h>
 #include <dlog.h>
-#include <SecCryptoSvc.h>
+#include <glib.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
@@ -43,9 +43,7 @@
 
 #define KEY_MAX 20
 
-#define TIZEN_ID_PATH		"/opt/home/root/tizenid"
 #define RANDOM_PATH			"/dev/random"
-#define MODEL_CONFIG_PATH	"/etc/config/model-config.xml"
 
 static int get_pw_key(char *pw, unsigned int len)
 {
@@ -90,9 +88,9 @@ static int get_salt_by_model(char *salt, unsigned int len)
 	if (!salt)
 		return -EINVAL;
 
-	fp = fopen(MODEL_CONFIG_PATH, "r");
+	fp = fopen(CONFIG_FILE_PATH, "r");
 	if (!fp) {
-		_E("Failed to open (%s)", MODEL_CONFIG_PATH);
+		_E("Failed to open (%s)", CONFIG_FILE_PATH);
 		return -ENOENT;
 	}
 
@@ -156,7 +154,8 @@ static int store_tizen_id(char *id)
 static int make_tizen_id(void)
 {
 	char salt[KEY_MAX], pw_key[KEY_MAX];
-	char *id = NULL, *id_64 = NULL;
+	char *id = NULL;
+	gchar *id_64 = NULL;
 	int ret;
 
 	ret = get_salt_by_model(salt, sizeof(salt));
@@ -190,7 +189,7 @@ static int make_tizen_id(void)
 	id[KEY_MAX-1] = '\0';
 	_I("ID: (%s)", id);
 
-	id_64 = Base64Encoding(id, KEY_MAX);
+	id_64 = g_base64_encode((const guchar *)id, KEY_MAX);
 
 	ret = store_tizen_id(id_64);
 	if (ret < 0) {
@@ -204,7 +203,7 @@ out:
 	if (id)
 		free(id);
 	if (id_64)
-		free(id_64);
+		g_free(id_64);
 
 	return ret;
 }

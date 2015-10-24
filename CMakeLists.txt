@@ -1,6 +1,7 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 SET(fw_name "capi-system-info")
+SET(external_plugin "${fw_name}-plugin")
 
 PROJECT(${fw_name})
 
@@ -27,6 +28,11 @@ IF("${ARCH}" STREQUAL "arm")
 ENDIF("${ARCH}" STREQUAL "arm")
 
 ADD_DEFINITIONS("-DPREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
+ADD_DEFINITIONS("-DCONFIG_FILE_PATH=\"${CONFIG_FILE_PATH}\"")
+ADD_DEFINITIONS("-DINFO_FILE_PATH=\"${INFO_FILE_PATH}\"")
+ADD_DEFINITIONS("-DOS_RELEASE_FILE_PATH=\"${OS_RELEASE_FILE_PATH}\"")
+ADD_DEFINITIONS("-DSERIAL_PATH=\"${SERIAL_PATH}\"")
+ADD_DEFINITIONS("-DTIZEN_ID_PATH=\"${TIZEN_ID_PATH}\"")
 ADD_DEFINITIONS("-DSLP_DEBUG")
 
 SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--as-needed -Wl,--rpath=/usr/lib")
@@ -34,7 +40,7 @@ SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--as-needed -Wl,--rpath=/usr/lib")
 aux_source_directory(src SOURCES)
 ADD_LIBRARY(${fw_name} SHARED ${SOURCES})
 
-TARGET_LINK_LIBRARIES(${fw_name} ${${fw_name}_LDFLAGS})
+TARGET_LINK_LIBRARIES(${fw_name} ${${fw_name}_LDFLAGS} "-ldl")
 
 SET_TARGET_PROPERTIES(${fw_name}
      PROPERTIES
@@ -49,6 +55,7 @@ INSTALL(
         FILES_MATCHING
         PATTERN "*_private.h" EXCLUDE
         PATTERN "*_doc.h" EXCLUDE
+        PATTERN "*_intf.h" EXCLUDE
         PATTERN "${INC_DIR}/*.h"
         )
 
@@ -64,7 +71,20 @@ CONFIGURE_FILE(
 )
 INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${fw_name}.pc DESTINATION lib/pkgconfig)
 
+SET(PLUGIN_PC_NAME ${external_plugin})
+CONFIGURE_FILE(
+    ${PLUGIN_PC_NAME}.pc.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_PC_NAME}.pc
+    @ONLY
+)
+INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_PC_NAME}.pc DESTINATION lib/pkgconfig)
+INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/system_info_intf.h DESTINATION include/plugin)
+
 ADD_SUBDIRECTORY(src/tizenid)
+
+IF("${PRODUCT_PLUGIN}" STREQUAL "ON")
+	ADD_SUBDIRECTORY(src/product_plugin)
+ENDIF()
 
 IF(UNIX)
 

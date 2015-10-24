@@ -32,7 +32,7 @@ extern "C"
 
 /**
  * @brief   Gets the boolean value of the @a platform feature.
- * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
+ * @since_tizen 2.3
  * @param[in] key The name of the platform feature to get
  * @param[out] value The value of the given platform feature
  * @return  @c 0 on success,
@@ -46,7 +46,7 @@ int system_info_get_platform_bool(const char *key, bool *value);
 
 /**
  * @brief   Gets the integer value of the @a platform feature.
- * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
+ * @since_tizen 2.3
  * @param[in] key The name of the platform feature to get
  * @param[out] value The value of the given platform feature
  * @return  @c 0 on success,
@@ -60,7 +60,7 @@ int system_info_get_platform_int(const char *key, int *value);
 
 /**
  * @brief   Gets the double value of the @a platform feature.
- * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
+ * @since_tizen 2.3
  * @param[in] key The name of the platform feature to get
  * @param[out] value The value of the given platform feature
  * @return  @c 0 on success,
@@ -74,7 +74,7 @@ int system_info_get_platform_double(const char *key, double *value);
 
 /**
  * @brief   Gets the string value of the @a platform feature.
- * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
+ * @since_tizen 2.3
  * @remarks You must release the @a value using free().
  * @param[in] key The name of the platform feature to get
  * @param[out] value The value of the given platform feature
@@ -91,7 +91,7 @@ int system_info_get_platform_string(const char *key, char **value);
 
 /**
  * @brief   Gets the boolean value of the @a custom feature.
- * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
+ * @since_tizen 2.3
  * @param[in] key The name of the custom feature to get. NOTE: This custom function uses a custom key which is provided by OEM's
  * @param[out] value The value of the given custom feature
  * @return  @c 0 on success,
@@ -105,7 +105,7 @@ int system_info_get_custom_bool(const char *key, bool *value);
 
 /**
  * @brief   Gets the integer value of the @a custom feature.
- * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
+ * @since_tizen 2.3
  * @param[in] key The name of the custom feature to get. NOTE: This custom function uses a custom key which is provided by OEM's
  * @param[out] value The value of the given custom feature
  * @return  @c 0 on success,
@@ -119,7 +119,7 @@ int system_info_get_custom_int(const char *key, int *value);
 
 /**
  * @brief   Gets the double value of the @a custom feature.
- * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
+ * @since_tizen 2.3
  * @param[in] key The name of the custom feature to get. NOTE: This custom function uses a custom key which is provided by OEM's
  * @param[out] value The value of the given custom feature
  * @return  @c 0 on success,
@@ -133,7 +133,7 @@ int system_info_get_custom_double(const char *key, double *value);
 
 /**
  * @brief   Gets the string value of the @a custom feature.
- * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
+ * @since_tizen 2.3
  * @remarks You must release the @a value using free().
  * @param[in] key The name of the custom feature to get. NOTE: This custom function uses a custom key which is provided by OEM's
  * @param[out] value The value of the given custom feature
